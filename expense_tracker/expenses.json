@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2026-03-08",
+    "amount": 7.99,
+    "category": "Ēdiens",
+    "description": "Čebureks Jūrmalā"
+  },
+  {
+    "date": "2025-07-21",
+    "amount": 99.99,
+    "category": "Cits",
+    "description": "Tests kaut kāds nez kāds"
+  },
+  {
+    "date": "2027-03-21",
+    "amount": 109.99,
+    "category": "Komunālie maksājumi",
+    "description": "Atcerējos kas par testu"
+  },
+  {
+    "date": "2025-04-21",
+    "amount": 99999.99,
+    "category": "Komunālie maksājumi",
+    "description": "Visgarākais iespējamais teksts"
+  }
+]
