@@ -183,7 +183,9 @@ def edit_expense(expenses):
     
     print("\nIzdevumi:\n")
 
-    for i, exp in enumerate(sorted(expenses, key=lambda x: x["date"]), start=1):
+    sorted_expenses = sorted(expenses, key=lambda x: x["date"]) #šis kods palīdzēs programmai izvēlēties pareizo izdevumu, kuru lietotājs izvēlās pēc kārtas numura, ne pēc kārtības kurā izdevums tika ievests programmā.
+
+    for i, exp in enumerate(sorted_expenses, start=1):
         print(f"{i}) {exp['date']} | {exp['amount']:.2f} EUR | {exp['category']} | {exp['description']}")
 
     choice = input("\nKuru ierakstu vēlaties rediģēt? (Lai atceltu darbību, ierakstiet 0): ")
@@ -194,7 +196,7 @@ def edit_expense(expenses):
         if index == 0:
             return
         
-        expense = expenses[index - 1]
+        expense = sorted_expenses[index - 1]
 
     except:
         print("Nepareiza izvēle.")
@@ -261,7 +263,7 @@ def export_expenses(expenses):
         print("\nNav izdevumu ko eksportēt.")
         return
     
-    filename = input("\nFaila nosakums [izdevumi.csv]: ").strip()
+    filename = input("\nFaila nosaukums [izdevumi.csv]: ").strip()
 
     if not filename:
         filename = "izdevumi.csv"

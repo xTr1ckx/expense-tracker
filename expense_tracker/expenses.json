@@ -7,13 +7,13 @@
   },
   {
     "date": "2026-03-09",
-    "amount": 120.5,
+    "amount": 3.0,
     "category": "Veselība",
     "description": "Tests ar garu aprakstu lai pārbaudītu vai tiek saīsināts"
   },
   {
     "date": "2022-07-10",
-    "amount": 130.53,
+    "amount": 1.0,
     "category": "Cits",
     "description": "Kaut kas dārgs"
   },
@@ -22,5 +22,11 @@
     "amount": 0.99,
     "category": "Iepirkšanās",
     "description": "Dāvanu maiss"
+  },
+  {
+    "date": "2025-04-09",
+    "amount": 7.5,
+    "category": "Transports",
+    "description": "Tests v2"
   }
 ]
