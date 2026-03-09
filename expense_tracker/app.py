@@ -146,8 +146,7 @@ def filter_expenses(expenses):
     choice = input("\nIzvēlies mēnesi: ")
 
     try:
-        index = int(choice) - 1
-        month = months[index]
+        month = months[int(choice) - 1]
     except:
         print("Nepareiza izvēle.")
         return
@@ -256,6 +255,20 @@ def delete_expense(expenses):
     except:
         print("Lūdzu izvēlaties izdevumu no saraksta.")
 
+def export_expenses(expenses):
+    """Eksportē izdevumus CSV failā."""
+    if not expenses:
+        print("\nNav izdevumu ko eksportēt.")
+        return
+    
+    filename = input("\nFaila nosakums [izdevumi.csv]: ").strip()
+
+    if not filename:
+        filename = "izdevumi.csv"
+
+    count = export_to_csv(expenses, filename)
+
+    print(f"\n✓ Eksportēts: {count} ieraksti -> {filename}")
 
 def main():
     """Galvenais programmas cikls."""
@@ -283,7 +296,8 @@ def main():
         elif choice == "6":
             delete_expense(expenses)
 
-        #elif choice == "7":
+        elif choice == "7":
+            export_expenses(expenses)
 
         elif choice == "8":
             print("Uz redzēšanos!")

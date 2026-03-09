@@ -7,8 +7,8 @@
   },
   {
     "date": "2026-03-09",
-    "amount": 6.99,
-    "category": "Iepirkšanās",
+    "amount": 120.5,
+    "category": "Veselība",
     "description": "Tests ar garu aprakstu lai pārbaudītu vai tiek saīsināts"
   },
   {
@@ -16,5 +16,11 @@
     "amount": 130.53,
     "category": "Cits",
     "description": "Kaut kas dārgs"
+  },
+  {
+    "date": "2000-03-21",
+    "amount": 0.99,
+    "category": "Iepirkšanās",
+    "description": "Dāvanu maiss"
   }
 ]
