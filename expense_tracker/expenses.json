@@ -16,11 +16,5 @@
     "amount": 130.53,
     "category": "Cits",
     "description": "Kaut kas dārgs"
-  },
-  {
-    "date": "2020-10-12",
-    "amount": 99999.99,
-    "category": "Komunālie maksājumi",
-    "description": "Tests priekš formatēšanas"
   }
 ]
