@@ -1,26 +1,26 @@
 [
   {
     "date": "2026-03-08",
-    "amount": 7.99,
-    "category": "Ēdiens",
-    "description": "Čebureks Jūrmalā"
+    "amount": 8.2,
+    "category": "Izklaide",
+    "description": "Dāvanas"
   },
   {
-    "date": "2025-07-21",
-    "amount": 99.99,
+    "date": "2023-05-31",
+    "amount": 6.99,
     "category": "Cits",
-    "description": "Tests kaut kāds nez kāds"
+    "description": "Tests ar garu aprakstu lai pārbaudītu vai tiek saīsināts"
   },
   {
-    "date": "2027-03-21",
-    "amount": 109.99,
-    "category": "Komunālie maksājumi",
-    "description": "Atcerējos kas par testu"
+    "date": "2022-07-10",
+    "amount": 130.53,
+    "category": "Cits",
+    "description": "Kaut kas dārgs"
   },
   {
-    "date": "2025-04-21",
+    "date": "2020-10-12",
     "amount": 99999.99,
     "category": "Komunālie maksājumi",
-    "description": "Visgarākais iespējamais teksts"
+    "description": "Tests priekš formatēšanas"
   }
 ]

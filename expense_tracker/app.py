@@ -4,11 +4,13 @@ from datetime import date, datetime
 
 CATEGORIES = ["Ēdiens", "Transports", "Izklaide", "Komunālie maksājumi", "Veselība", "Iepirkšanās", "Cits"]
 
-# Kolonnu platumi (simbolu skaitā)
+"""Kolonnu platumi (simbolu skaitā)"""
 DATE_W = 12
 AMOUNT_W = 8
 CATEGORY_W = 20
-DESC_W = 25
+DESC_W = 22
+
+COL_SPACING = "  "
 
 print("=" * 30)
 print("     Izdevumu izsekotājs")
@@ -86,7 +88,7 @@ def truncate(text, max_len=DESC_W):
     """Saīsina tekstu līdz max_len simbolu skaitam"""
     if len(text) <= max_len:
         return text
-    return text[:max_len - 3] + "..."
+    return text[:max_len - 3] + "."
 
 def add_expense(expenses):
     """"Pievieno jaunu izdevumu."""
@@ -112,21 +114,34 @@ def list_expenses(expenses):
         print("\nNav neviena ieraksta.")
         return
     
-    print(f"{'Datums':<{DATE_W}}" f"{'Summa':>{AMOUNT_W}}" f"{'Kategorija':<{CATEGORY_W}}" f"{'Apraksts':<{DESC_W}}")
-    print("-" * (DATE_W + AMOUNT_W + CATEGORY_W + DESC_W + 10)) #printē noteiktu skaitu domu zīmju
+    print()
+    print(
+        f"{'Datums':<{DATE_W}}" 
+        f"{COL_SPACING}"
+        f"{'Summa':{AMOUNT_W}}"
+        f"{COL_SPACING}"
+        f"{'Kategorija':{CATEGORY_W}}" 
+        f"{COL_SPACING}"
+        f"{'Apraksts':{DESC_W}}"
+        )
+    line_width = DATE_W + AMOUNT_W + CATEGORY_W + DESC_W + len(COL_SPACING) * 5
+    print("-" * line_width)
 
     for exp in expenses:
         description = truncate(exp["description"])
         print(
-            f"{exp['date']:<{DATE_W}}  "
-            f"{exp['amount']:>{AMOUNT_W}.2f} EUR  " #Python f-string formatēšana. 8 apzīmē simbolu platuma minimumu un 2 nozīmē divi skaitļi pēc komata (kā tiek apzīmētas cenas dzīvajā).
-            f"{exp['category']:<{CATEGORY_W}}  " #20 apzīmē simbolu platumu
+            f"{exp['date']:<{DATE_W}}"
+            f"{COL_SPACING}"
+            f"{exp['amount']:>{AMOUNT_W}.2f} EUR" #Python f-string formatēšana. 8 apzīmē simbolu platuma minimumu un 2 nozīmē divi skaitļi pēc komata (kā tiek apzīmētas cenas dzīvajā).
+            f"{COL_SPACING}"
+            f"{exp['category']:<{CATEGORY_W}}" #20 apzīmē simbolu platumu
+            f"{COL_SPACING}"
             f"{description:<{DESC_W}}"
         )
 
     total = sum_total(expenses)
 
-    print("-" * (DATE_W + AMOUNT_W + CATEGORY_W + DESC_W + 10))
+    print("-" * line_width)
     print(f"Kopā: {total:.2f} EUR ({len(expenses)} ieraksti)")
 
 def main():
