@@ -23,10 +23,12 @@ def show_menu():
     print("2) Parādīt izdevumus")
     print("3) Filtrēt pēc mēneša")
     print("4) Kopsavilkums pa kategorijām")
-    print("5) Rediģēt izdevumu")
-    print("6) Dzēst izdevumu")
-    print("7) Eksportēt CSV")
-    print("8) Iziet")
+    print("5) Statistika")
+    print("6) Meklēšana")
+    print("7) Rediģēt izdevumu")
+    print("8) Dzēst izdevumu")
+    print("9) Eksportēt CSV")
+    print("10) Iziet")
 
     return input("\nIzvēlies darbību: ")
 
@@ -272,6 +274,67 @@ def export_expenses(expenses):
 
     print(f"\n✓ Eksportēts: {count} ieraksti -> {filename}")
 
+def show_statistics(expenses):
+    """Parāda statistiku par izdevumiem."""
+    if not expenses:
+        print("\nNav izdevumu.")
+        return
+    
+    total = sum_total(expenses)
+
+    """Vidējais dienas patēriņš"""
+    dates = {exp["date"] for exp in expenses}
+    avg_per_day = total / len(dates)
+
+    """Dārgākā kategorija"""
+    category_totals = sum_by_category(expenses)
+    max_category = max(category_totals, key=category_totals.get)
+
+    """Dienas izmaksas"""
+    per_day = {}
+
+    for exp in expenses:
+        day = exp["date"]
+        per_day[day] = per_day.get(day, 0) + 1
+
+    print("\nStatistika:\n")
+
+    print(f"Kopējie izdevumi: {total:.2f} EUR")
+    print(f"Vidēji dienā: {avg_per_day:.2f} EUR")
+    print(f"Dārgākā kategorija: {max_category} ({category_totals[max_category]:.2f} EUR)")
+
+    print("\nIzdevumu skaits pa dienām:")
+
+    for day, count in sorted(per_day.items()):
+        print(f"{day}: {count}")
+
+def search_expenses(expenses):
+    """Meklē izdevumus pēc apraksta"""
+    if not expenses:
+        print("\nNav izdevumu.")
+        return
+    
+    query = input("\nMeklēt: ").lower().strip()
+
+    if not query:
+        print("Nav ievadīts teksts.")
+        return
+    
+    results = []
+
+    for exp in expenses:
+        if query in exp["description"].lower():
+            results.append(exp)
+
+    if not results:
+        print("\nNekas netika atrasts.")
+        return
+
+    print(f"\nAtrasti {len(results)} rezultāti:\n")
+
+    for exp in results:
+        print(f"{exp['date']} | {exp['amount']:.2f} EUR | {exp['category']} | {exp['description']}")
+
 def main():
     """Galvenais programmas cikls."""
 
@@ -293,20 +356,25 @@ def main():
             category_summary(expenses)
 
         elif choice == "5":
-            edit_expense(expenses)
+            show_statistics(expenses)
 
         elif choice == "6":
-            delete_expense(expenses)
+            search_expenses(expenses)
 
         elif choice == "7":
-            export_expenses(expenses)
+            edit_expense(expenses)
 
         elif choice == "8":
+            delete_expense(expenses)
+
+        elif choice == "9":
+            export_expenses(expenses)
+
+        elif choice == "10":
             print("Uz redzēšanos!")
             break
         else:
-            print("Nepareiza izvēle. Izvēlaties no 1-8.")
+            print("Nepareiza izvēle. Izvēlaties no 1-10.")
 
 if __name__ == "__main__":
     main()                    
-

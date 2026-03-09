@@ -20,6 +20,8 @@ Programma darbojās interaktīvā režīmā ar izvēlni:
 2) Parādīt izdevumus                    - Parāda visus ievadītos izdevumus
 3) Filtrēt pēc mēneša                   - Ļauj lietotājam ērti skatīt izdevumus pēc gada un mēneša
 4) Kopsavilkums pa kategorijām          - Parāda kopējo cenu summu pa kategorijām
+5) Statistika                           - Parāda vidējo izdevumu dienā, dārgāko kategoriju un izdevumu skaitu pa dienām
+6) Meklēšana                            - Meklē izdevumus pēc apraksta
 5) Rediģēt izdevumu                     - Ļauj lietotājam rediģēt jebkuru elementu jebkuram izdevumam, bez nepieciešamības dzēst to ārā
 6) Dzēst izdevumu                       - Izdzēš jebkuru izdevumu no saraksta
 7) Eksportēt CSV                        - Eksportē visu izdevumus CSV failā
