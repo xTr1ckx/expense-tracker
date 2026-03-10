@@ -14,19 +14,31 @@
   {
     "date": "2022-07-10",
     "amount": 1.0,
-    "category": "Cits",
+    "category": "Ēdiens",
     "description": "Kaut kas dārgs"
-  },
-  {
-    "date": "2000-03-21",
-    "amount": 0.99,
-    "category": "Iepirkšanās",
-    "description": "Dāvanu maiss"
   },
   {
     "date": "2025-04-09",
     "amount": 7.5,
     "category": "Transports",
     "description": "Tests v2"
+  },
+  {
+    "date": "2026-03-10",
+    "amount": 10.0,
+    "category": "Ēdiens",
+    "description": "Tests v3"
+  },
+  {
+    "date": "2026-03-10",
+    "amount": 13.99,
+    "category": "Cits",
+    "description": "Jauns izdevums"
+  },
+  {
+    "date": "2012-12-03",
+    "amount": 3.49,
+    "category": "Ēdiens",
+    "description": "Konfektes"
   }
 ]

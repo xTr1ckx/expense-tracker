@@ -1,133 +1,26 @@
 from storage import load_expenses, save_expenses
-from logic import sum_total, filter_by_month, sum_by_category, get_available_months
+from logic import sum_total, filter_by_month, sum_by_category, get_available_months, calculate_statistics, search_expenses_logic
+from ui import show_menu, choose_category, input_amount, input_date, show_header, list_expenses_display, show_available_months, show_filtered_expenses, show_category_summary, show_statistics_ui, show_search_results, truncate
 from datetime import date, datetime
 from export import export_to_csv
 
-CATEGORIES = ["Ēdiens", "Transports", "Izklaide", "Komunālie maksājumi", "Veselība", "Iepirkšanās", "Cits"]
-
-"""Kolonnu platumi (simbolu skaitā)"""
-DATE_W = 11
-AMOUNT_W = 8
-CATEGORY_W = 19
-DESC_W = 22
-
-print("=" * 30)
-print("     Izdevumu izsekotājs")
-print("=" * 30)
-
-def show_menu():
-    """Parāda galveno izvēlni un atgriež lietotāja izvēli."""
-    print("\n1) Pievienot izdevumu")
-    print("2) Parādīt izdevumus")
-    print("3) Filtrēt pēc mēneša")
-    print("4) Kopsavilkums pa kategorijām")
-    print("5) Statistika")
-    print("6) Meklēšana")
-    print("7) Rediģēt izdevumu")
-    print("8) Dzēst izdevumu")
-    print("9) Eksportēt CSV")
-    print("10) Iziet")
-
-    return input("\nIzvēlies darbību: ")
-
-def choose_category():
-    """Ļauj lietotājam izvēlēties kategoriju."""
-    print("\nKategorija: ")
-
-    for i, cat in enumerate(CATEGORIES, start=1):
-        print(f"{i}) {cat}")
-
-    while True:
-        choice = input("Izvēlies kategoriju (1-7): ")
-
-        try:
-            index = int(choice)
-            if 1 <= index <= len(CATEGORIES):
-                return CATEGORIES[index - 1]
-        except ValueError:
-            pass
-
-        print("Šāda kategorija nepastāv! Izvēlies no 1-7.")
-
-def input_amount():
-    """Nolasa un validē summu."""
-    while True:
-        value = input("Summa (EUR): ")
-
-        try:
-            amount = float(value)
-
-            if amount <= 0:
-                print("Summai ir jābūt pozitīvai!")
-                continue
-
-            if amount > 99999.99:
-                print("Summa ir pārāk liela! Maksimālā atļautā summa ir 99999.99 EUR.")
-                continue
-
-            return amount
-        except ValueError:
-            print("Lūdzu ievadīt derīgu skaitli.")
-
-def input_date():
-    """Nolasa un validē datumu (YYYY-MM-DD)."""
-    today = date.today().isoformat()
-
-    while True:
-        value = input(f"Datums (YYYY-MM-DD) [{today}]: ").strip()
-
-        if not value:
-            return today
-        
-        try:
-            datetime.strptime(value, "%Y-%m-%d")
-            return value
-        except ValueError:
-            print("Nepareizs datuma formāts! Pareizs formāts: YYYY-MM-DD.")
-
-def truncate(text, max_len=DESC_W):
-    """Saīsina tekstu līdz max_len simbolu skaitam"""
-    if len(text) <= max_len:
-        return text
-    return text[:max_len - 3] + "."
-
 def add_expense(expenses):
-    """"Pievieno jaunu izdevumu."""
+     """"Pievieno jaunu izdevumu."""
+     date_input = input_date()
+     amount = input_amount()
+     category = choose_category()
+     description = input("Apraksts: ")
 
-    date_input = input_date()
-    amount = input_amount()
-    category = choose_category()
-    description = input("Apraksts: ")
+     expense = {"date": date_input, "amount": amount, "category": category, "description": description,}
+     expenses.append(expense)
+     save_expenses(expenses)
 
-    expense = {"date": date_input, "amount": amount, "category": category, "description": description,}
-
-    expenses.append(expense)
-    save_expenses(expenses)
-
-    print(f"\n✓ Pievienots: {date_input} | {category} | {amount:.2f} EUR | {description}")
+     print(f"\n✓ Pievienots: {date_input} | {category} | {amount:.2f} EUR | {description}")
 
 def list_expenses(expenses):
     """Parāda visus izdevumus."""
-
-    expenses = sorted(expenses, key=lambda x: x["date"]) #sakārto izdevumus secīgi pēc datumiem
-
-    if not expenses:
-        print("\nNav neviena ieraksta.")
-        return
-    
-    print()
-    print(f"{'Datums':<{DATE_W}} | {'Summa':{AMOUNT_W}}     | {'Kategorija':{CATEGORY_W}} | {'Apraksts':{DESC_W}}")
-    
-    print("-" * 70)
-
-    for exp in expenses:
-        description = truncate(exp["description"])
-        print(f"{exp['date']:<{DATE_W}} | {exp['amount']:>{AMOUNT_W}.2f} EUR | {exp['category']:<{CATEGORY_W}} | {description:<{DESC_W}}")
-
     total = sum_total(expenses)
-
-    print("-" * 70)
-    print(f"Kopā: {total:.2f} EUR ({len(expenses)} ieraksti)")
+    list_expenses_display(expenses, total)
 
 def filter_expenses(expenses):
     """Filtrē izdevumus pēc gada un mēneša."""
@@ -136,12 +29,7 @@ def filter_expenses(expenses):
     if not months:
         print("\nNav pieejamu mēnešu.")
         return
-    
-    print("\nPieejamie mēneši:\n")
-
-    for i, month in enumerate(months, start=1):
-        print(f"{i} {month}")
-
+    show_available_months(months)
     choice = input("\nIzvēlies mēnesi: ")
 
     try:
@@ -151,37 +39,48 @@ def filter_expenses(expenses):
         return
     
     filtered = filter_by_month(expenses, month)
-
-    print(f"\n{month} izdevumi:\n")
-
-    for exp in filtered:
-        print(f"{exp['date']} | {exp['amount']:.2f} EUR | {exp['category']} | {exp['description']}")
-
     total = sum_total(filtered)
-    print(f"\nKopā: {total:.2f} EUR ({len(filtered)} ieraksti)")
+    show_filtered_expenses(filtered, month, total)
 
 def category_summary(expenses):
     """Grupē summas pa kategorijām."""
     totals = sum_by_category(expenses)
+    show_category_summary(totals)
 
-    if not totals:
-        print("\nNav ierakstītu izdevumu.") 
+def show_statistics(expenses):
+    """Parāda statistiku par izdevumiem"""
+    if not expenses:
+        print("\nNav izdevumu.")
         return
     
-    print("\nKopsavilkums pa kategorijām:\n")
+    stats = calculate_statistics(expenses)
+    show_statistics_ui(**stats)
 
-    for category, total in totals.items():
-        print(f"{category}: {total:.2f} EUR")
+def search_expenses(expenses):
+    """Meklē izdevumus pēc apraksta."""
+    if not expenses:
+        print("\nNav izdevumu.")
+        return
+    
+    query = input("\nMeklēt: ").lower().strip()
+    if not query:
+        print("Nav ievadīts teksts.")
+        return
+    
+    results = search_expenses_logic(expenses, query)
+    if not results:
+        print("\nNekas netika atrasts.")
+        return
+    
+    show_search_results(results)
 
 def edit_expense(expenses):
     """Rediģēt pastāvošo izdevumu."""
-
     if not expenses:
         print("\nNav ierakstu ko rediģēt.")
         return
     
     print("\nIzdevumi:\n")
-
     sorted_expenses = sorted(expenses, key=lambda x: x["date"]) #šis kods palīdzēs programmai izvēlēties pareizo izdevumu, kuru lietotājs izvēlās pēc kārtas numura, ne pēc kārtības kurā izdevums tika ievests programmā.
 
     for i, exp in enumerate(sorted_expenses, start=1):
@@ -191,12 +90,9 @@ def edit_expense(expenses):
 
     try:
         index = int(choice)
-
         if index == 0:
             return
-        
         expense = sorted_expenses[index - 1]
-
     except:
         print("Nepareiza izvēle.")
         return
@@ -211,22 +107,17 @@ def edit_expense(expenses):
 
     if field_choice == "1":
         expense["date"] = input_date()
-
     elif field_choice == "2":
         expense["amount"] = input_amount()
-
     elif field_choice == "3":
         expense["category"] = choose_category()
-
     elif field_choice == "4":
         expense["description"] = input("Jauns apraksts: ")
-
     else:
         print("Nepareiza izvēle. Izvēlaties no 1-4.")
         return
 
     save_expenses(expenses)
-
     print("\n✓ Izdevums veiksmīgi atjaunināts.")  
 
 def delete_expense(expenses):
@@ -236,7 +127,6 @@ def delete_expense(expenses):
         return
     
     print("\nIzdevumi:\n")
-
     for i, exp in enumerate(expenses, start=1):
         print(f"{i}) {exp['date']} | {exp['amount']:.2f} EUR | {exp['category']} | {exp['description']}")
 
@@ -244,15 +134,12 @@ def delete_expense(expenses):
 
     try:
         index = int(choice)
-
         if index == 0:
             return
         
         removed = expenses.pop(index - 1)
         save_expenses(expenses)
-
         print(f"\n✓ Dzēsts: {removed['date']} | {removed['amount']:.2f} EUR | {removed['category']} | {removed['description']}")
-
     except:
         print("Lūdzu izvēlaties izdevumu no saraksta.")
 
@@ -263,78 +150,15 @@ def export_expenses(expenses):
         return
     
     filename = input("\nFaila nosaukums [izdevumi.csv]: ").strip()
-
     if not filename:
         filename = "izdevumi.csv"
 
     count = export_to_csv(expenses, filename)
-
     print(f"\n✓ Eksportēts: {count} ieraksti -> {filename}")
-
-def show_statistics(expenses):
-    """Parāda statistiku par izdevumiem."""
-    if not expenses:
-        print("\nNav izdevumu.")
-        return
-    
-    total = sum_total(expenses)
-
-    """Vidējais dienas patēriņš"""
-    dates = {exp["date"] for exp in expenses}
-    avg_per_day = total / len(dates)
-
-    """Dārgākā kategorija"""
-    category_totals = sum_by_category(expenses)
-    max_category = max(category_totals, key=category_totals.get)
-
-    """Dienas izmaksas"""
-    per_day = {}
-
-    for exp in expenses:
-        day = exp["date"]
-        per_day[day] = per_day.get(day, 0) + 1
-
-    print("\nStatistika:\n")
-
-    print(f"Kopējie izdevumi: {total:.2f} EUR")
-    print(f"Vidēji dienā: {avg_per_day:.2f} EUR")
-    print(f"Dārgākā kategorija: {max_category} ({category_totals[max_category]:.2f} EUR)")
-
-    print("\nIzdevumu skaits pa dienām:")
-
-    for day, count in sorted(per_day.items()):
-        print(f"{day}: {count}")
-
-def search_expenses(expenses):
-    """Meklē izdevumus pēc apraksta"""
-    if not expenses:
-        print("\nNav izdevumu.")
-        return
-    
-    query = input("\nMeklēt: ").lower().strip()
-
-    if not query:
-        print("Nav ievadīts teksts.")
-        return
-    
-    results = []
-
-    for exp in expenses:
-        if query in exp["description"].lower():
-            results.append(exp)
-
-    if not results:
-        print("\nNekas netika atrasts.")
-        return
-
-    print(f"\nAtrasti {len(results)} rezultāti:\n")
-
-    for exp in results:
-        print(f"{exp['date']} | {exp['amount']:.2f} EUR | {exp['category']} | {exp['description']}")
 
 def main():
     """Galvenais programmas cikls."""
-
+    show_header()
     expenses = load_expenses()
 
     while True:
@@ -342,31 +166,22 @@ def main():
 
         if choice == "1":
             add_expense(expenses)
-
         elif choice == "2":
             list_expenses(expenses)
-
         elif choice == "3":
             filter_expenses(expenses)
-
         elif choice == "4":
             category_summary(expenses)
-
         elif choice == "5":
             show_statistics(expenses)
-
         elif choice == "6":
             search_expenses(expenses)
-
         elif choice == "7":
             edit_expense(expenses)
-
         elif choice == "8":
             delete_expense(expenses)
-
         elif choice == "9":
             export_expenses(expenses)
-
         elif choice == "10":
             print("Uz redzēšanos!")
             break
@@ -375,7 +190,3 @@ def main():
 
 if __name__ == "__main__":
     main()                    
-
-
-
-# REFACTOR ME!

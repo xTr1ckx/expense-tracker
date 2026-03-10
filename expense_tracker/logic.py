@@ -40,3 +40,31 @@ def get_available_months(expenses):
         months.add(expense["date"][:7])
 
     return sorted(months)
+
+def calculate_statistics(expenses):
+    """Aprēķina statistikas datus."""
+    total = sum_total(expenses)
+
+    """Vidējais dienas patēriņš"""
+    dates = {exp["date"] for exp in expenses}
+    avg_per_day = total / len(dates)
+
+    """Dārgākā kategorija"""
+    category_totals = sum_by_category(expenses)
+    max_category = max(category_totals, key=category_totals.get)
+
+    """Dienas izmaksas"""
+    per_day = {}
+    for exp in expenses:
+        day = exp["date"]
+        per_day[day] = per_day.get(day, 0) + 1
+
+        return{'total': total, 'avg_per_day': round(avg_per_day, 2), 'max_category': max_category, 'category_totals': category_totals, 'per_day': per_day}
+    
+def search_expenses_logic(expenses, query):
+    """Meklē izdevumus pēc apraksta."""
+    results = []
+    for exp in expenses:
+        if query in exp["description"].lower():
+            results.append(exp)
+    return results
