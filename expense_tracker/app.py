@@ -11,8 +11,6 @@ AMOUNT_W = 8
 CATEGORY_W = 19
 DESC_W = 22
 
-COL_SPACING = "  "
-
 print("=" * 30)
 print("     Izdevumu izsekotājs")
 print("=" * 30)
@@ -120,8 +118,7 @@ def list_expenses(expenses):
     print()
     print(f"{'Datums':<{DATE_W}} | {'Summa':{AMOUNT_W}}     | {'Kategorija':{CATEGORY_W}} | {'Apraksts':{DESC_W}}")
     
-    line_width = DATE_W + AMOUNT_W + CATEGORY_W + DESC_W + len(COL_SPACING) * 5
-    print("-" * line_width)
+    print("-" * 70)
 
     for exp in expenses:
         description = truncate(exp["description"])
@@ -129,7 +126,7 @@ def list_expenses(expenses):
 
     total = sum_total(expenses)
 
-    print("-" * line_width)
+    print("-" * 70)
     print(f"Kopā: {total:.2f} EUR ({len(expenses)} ieraksti)")
 
 def filter_expenses(expenses):
@@ -378,3 +375,7 @@ def main():
 
 if __name__ == "__main__":
     main()                    
+
+
+
+# REFACTOR ME!
