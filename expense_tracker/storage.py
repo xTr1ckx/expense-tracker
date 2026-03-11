@@ -8,10 +8,10 @@ def load_expenses():
     if not os.path.exists(EXPENSES_FILE):
         return []
     
-    with open(EXPENSES_FILE, "r", encoding="utf-8") as f:
+    with open(EXPENSES_FILE, "r", encoding="utf-8-sig") as f:
         return json.load(f)
     
 def save_expenses(expenses):
     """Saglabā izdevumu sarakstu JSON failā."""
-    with open(EXPENSES_FILE, "w", encoding="utf-8") as f:
+    with open(EXPENSES_FILE, "w", encoding="utf-8-sig") as f:
         json.dump(expenses, f, indent=2, ensure_ascii=False)
